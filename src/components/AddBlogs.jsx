@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import {Link} from 'react-router-dom';
-import Blogs from './Blogs';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 
 const AddBlogs = () => {
   const navigate = useNavigate();
@@ -11,7 +9,9 @@ const AddBlogs = () => {
     view : 0,
     authorName: '',
     blogTitle: '',
-    blogDes: ''
+    blogDes: '',
+    likes: false,
+    comment:[]
   });
   const [image, setImage] = useState(null);
   const [imageName, setImageName] = useState('');
@@ -45,7 +45,9 @@ const AddBlogs = () => {
       authorName: formData.authorName,
       blogTitle: formData.blogTitle,
       blogDes: formData.blogDes,
-      image: image
+      image: image,
+      likes: false,
+      comment:formData.comment
     };
     const existingData = JSON.parse(localStorage.getItem('blogData')) || [];
     existingData.push(blogData);
@@ -61,6 +63,8 @@ const AddBlogs = () => {
     console.log('Blog Title:', formData.blogTitle);
     console.log('Blog Description:', formData.blogDes);
     console.log('Image URL:', image);
+    console.log("Likes:" , formData.likes);
+    console.log('Comments:', formData.comment);
 
     sendToStorage();
 
