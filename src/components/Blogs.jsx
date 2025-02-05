@@ -23,31 +23,6 @@ const Blogs = () => {
       updatedBlogs[blogIndex].blogDes = newDescription;
       updatedBlogs[blogIndex].authorName = newAuthor;
 
-    //   const fileInput = document.createElement('input');
-    //   fileInput.type = 'file';
-    //   fileInput.accept = 'image/*';
-
-    //   fileInput.onchange = (event) => {
-    //     const file = event.target.files[0];
-    //     if (file) {
-    //       const reader = new FileReader();
-    //       reader.onload = (e) => {
-    //         updatedBlogs[blogIndex].image = e.target.result;
-            
-    //       };
-    //       reader.readAsDataURL(file);
-    //     } else {
-    //       setBlogs(updatedBlogs);
-    //       localStorage.setItem('blogData', JSON.stringify(updatedBlogs));
-    //     }
-    //   };
-
-    //   fileInput.click();
-    // } else {
-    //   const updatedBlogs = [...blogs];
-    //   setBlogs(updatedBlogs);
-    //   localStorage.setItem('blogData', JSON.stringify(updatedBlogs));
-    // }
     setBlogs(updatedBlogs);
     localStorage.setItem('blogData', JSON.stringify(updatedBlogs));
   }
@@ -72,8 +47,12 @@ const Blogs = () => {
     navigate(`/detailed-blogs/${id}`);
   }
 
+  function createFirst(){
+    navigate(`/add-blogs`);
+  }
+
   return (
-    <div className="mt-10 text-center bg-gray-200 py-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 px-10">
+    <div className="mt-10 text-center bg-gray-200 py-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 px-10 h-210 overflow-x-scroll">
       {blogs.length > 0 ? (
         blogs.map((blog) => (
           <div 
@@ -128,7 +107,13 @@ const Blogs = () => {
           </div>
         ))
       ) : (
-        <p className="text-center text-xl col-span-3">No blogs available </p>
+        <p className=" mx-auto text-xl ">
+          No blogs available
+          <button 
+          onClick={createFirst}
+          className='border border-black ml-5 m-2 p-3 rounded-4xl bg-green-300 text-black transition duration-300 hover:cursor-pointer hover:scale-102 hover:bg-black hover:text-white'> + Create Your First Blog
+          </button>
+        </p>
       )}
     </div>
   );

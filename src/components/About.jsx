@@ -14,7 +14,7 @@ const About = () => {
             <p><a href="#">LinkedIn</a></p>
         </div>
         <div className='flex flex-row justify-center gap-2 m-3'>
-            <p>© 2024 BloGram. All rights reserved. Unauthorized use or duplication of this material is prohibited.</p>
+            <p>© 2024 BloGram. All rights reserved.</p>
         </div>
       </div>
     </>
