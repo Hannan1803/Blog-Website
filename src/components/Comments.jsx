@@ -1,18 +1,49 @@
 import React, { useEffect, useState } from 'react';
 import { CircleUserRound, SendHorizontal } from 'lucide-react';
 
-const Comments = ({ blogId, addComment, initialComments }) => {
+const Comments = ({ blogId }) => {
   const [comment, setComment] = useState('');
-  const [comments, setComments] = useState(initialComments || []);
+  const [comments, setComments] = useState([]);
 
-  const handleSubmit = (e) => {
+  // Fetch comments from the database
+  useEffect(() => {
+    const fetchComments = async () => {
+        try {
+            const response = await fetch(`/api/comments/${blogId}`);
+            if (response.ok) {
+                const data = await response.json();
+                setComments(data); // Now, data contains text, author, and timestamp
+            }
+        } catch (error) {
+            console.error("Error fetching comments:", error);
+        }
+    };
+    fetchComments();
+}, [blogId]);
+
+
+  // Handle comment submission
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (comment.trim()) {
-      addComment(comment);
-      setComments([...comments, comment]);
-      setComment('');
+    if (!comment.trim()) return;
+
+    try {
+        const response = await fetch(`/api/comments/${blogId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ comment, author: "User123" }), // Send author
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            setComments([...comments, data.comment]); // Update UI dynamically
+            setComment('');
+        }
+    } catch (error) {
+        console.error("Error adding comment:", error);
     }
-  };
+};
+
 
   return (
     <>
@@ -23,11 +54,10 @@ const Comments = ({ blogId, addComment, initialComments }) => {
             <h1 className='text-xl'> Add new Comment :</h1>
           </div>
           <div className='flex gap-3 items-center ml-6 relative shrink-0'>
-            <div className='relative w-full '>
+            <div className='relative w-full'>
               <textarea
                 rows={1}
                 name="comment"
-                id="commentBar"
                 placeholder='Comment here'
                 className='border border-black p-2 w-full resize-none outline-none rounded-xl pr-10 h-fit'
                 value={comment}
@@ -35,7 +65,7 @@ const Comments = ({ blogId, addComment, initialComments }) => {
               </textarea>
               <button 
                 type="submit"
-                className='transition duration-200 hover:scale-130 hover:cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-3.5'>
+                className='transition duration-200 hover:scale-110 hover:cursor-pointer absolute top-1/2 transform -translate-y-1/2 right-3.5'>
                 <SendHorizontal height="25"/>
               </button>
             </div>
@@ -43,13 +73,13 @@ const Comments = ({ blogId, addComment, initialComments }) => {
         </form>
       </div>
       <div className='flex'>
-        {comments && comments.length > 0 && (
-          <div className='flex flex-col '>
+        {comments.length > 0 && (
+          <div className='flex flex-col'>
             {comments.map((com, index) => (
               <div className='flex flex-row p-4' key={index}>
                 <CircleUserRound />
                 <div className='border-b border-gray-300 ml-2'>
-                  {com}
+                  {com.text}
                 </div>
               </div>
             ))}
